@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Navbar, NavbarBrand, Jumbotron, Form, Button, Modal, ModalHeader, ModalBody, Nav, NavbarToggler, Collapse, NavItem, FormGroup, Input, Label } from 'reactstrap'
 import { NavLink } from 'react-router-dom'
+import axios from 'axios'
 class Header extends Component {
 
   constructor(props) {
@@ -30,7 +31,19 @@ class Header extends Component {
 
   handleLogin(event) {
     this.toggleModal()
-    alert("Username:" + this.username.value)
+    var data = {
+      username: document.getElementById('username').value,
+      password: document.getElementById('password').value
+    }
+    axios.post('http://localhost:9000/login', data).then((res) => {
+      if (res.data.auth) {
+        console.log('loggedin')
+      }
+      else {
+        console.log("wrong")
+      }
+
+    })
   }
 
   render() {
@@ -92,21 +105,21 @@ class Header extends Component {
         <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
           <ModalHeader>Login</ModalHeader>
           <ModalBody>
-            <Form onSubmit={this.handleLogin}>
-              <FormGroup>
-                <Label htmlFor='username'>Username</Label>
-                <Input type='text' id='username' name='username'
-                  innerRef={(input => this.username = input)} />
-              </FormGroup>
 
-              <FormGroup>
-                <Label htmlFor='password'>Password</Label>
-                <Input type='password' id='password' name='username'
-                  innerRef={(input => this.password = input)} />
-              </FormGroup>
+            <FormGroup>
+              <Label htmlFor='username'>Username</Label>
+              <Input type='text' id='username' name='username'
+                innerRef={(input => this.username = input)} />
+            </FormGroup>
 
-              <Button type='submit' value='submit' color='primary'>Login</Button>
-            </Form>
+            <FormGroup>
+              <Label htmlFor='password'>Password</Label>
+              <Input type='password' id='password' name='username'
+                innerRef={(input => this.password = input)} />
+            </FormGroup>
+
+            <Button type='submit' value='submit' color='primary' onClick={this.handleLogin}>Login</Button>
+
 
             <NavLink to='/register'>
               New on community? Register to help others

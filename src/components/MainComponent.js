@@ -18,6 +18,7 @@ class Main extends Component {
                     <Route path='/home' component={Home} />
                     <Route path='/aboutus' component = {About} />
                     <Route path='/register' component = {Register} />
+
                     <Redirect to='/home' />
                 </Switch>
                 <Footer />
