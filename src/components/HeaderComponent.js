@@ -149,10 +149,6 @@ class Header extends Component {
             </div>
           </div>
         </Jumbotron>
-
-
-
-
       </>
     )
   }
