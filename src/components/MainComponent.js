@@ -6,18 +6,30 @@ import { Switch, Route, Redirect } from 'react-router-dom'
 import About from './AboutComponent'
 import Register from './RegisterComponent'
 class Main extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            isLoggedIn: false
+        }
+        this.changeLoginStatus = this.changeLoginStatus.bind(this)
+    }
 
+    changeLoginStatus(val) {
+        this.setState({
+            isLoggedIn: val
+        })
+    }
 
     render() {
 
         return (
             <div>
 
-                <Header />
+                <Header isLoggedIn={this.state.isLoggedIn} changeLoginStatus={this.changeLoginStatus} />
                 <Switch>
                     <Route path='/home' component={Home} />
-                    <Route path='/aboutus' component = {About} />
-                    <Route path='/register' component = {Register} />
+                    <Route path='/aboutus' component={About} />
+                    <Route path='/register' component={Register} />
 
                     <Redirect to='/home' />
                 </Switch>

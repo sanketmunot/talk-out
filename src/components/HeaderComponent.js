@@ -14,6 +14,7 @@ class Header extends Component {
     this.toggleNav = this.toggleNav.bind(this)
     this.toggleModal = this.toggleModal.bind(this)
     this.handleLogin = this.handleLogin.bind(this)
+    this.handleLogout = this.handleLogout.bind(this)
 
   }
 
@@ -24,12 +25,16 @@ class Header extends Component {
   }
 
   toggleModal() {
+    this.props.changeLoginStatus(true)
+    document.getElementById('registerButton').style.display = 'none'
+    document.getElementById('loginButton').style.display = 'none'
+    document.getElementById('logoutButton').style.display = 'block'
     this.setState({
       isModalOpen: !this.state.isModalOpen
     })
   }
 
-  handleLogin(event) {
+  handleLogin() {
     this.toggleModal()
     var data = {
       username: document.getElementById('username').value,
@@ -37,6 +42,10 @@ class Header extends Component {
     }
     axios.post('http://localhost:9000/login', data).then((res) => {
       if (res.data.auth) {
+        this.props.changeLoginStatus(true)
+        document.getElementById('registerButton').style.display = 'none'
+        document.getElementById('loginButton').style.display = 'none'
+        document.getElementById('logoutButton').style.display = 'block'
         console.log('loggedin')
       }
       else {
@@ -45,6 +54,14 @@ class Header extends Component {
 
     })
   }
+
+  handleLogout(){
+    this.props.changeLoginStatus(false)
+        document.getElementById('registerButton').style.display = 'block'
+        document.getElementById('loginButton').style.display = 'block'
+        document.getElementById('logoutButton').style.display = 'none'
+  }
+
 
   render() {
     return (
@@ -71,16 +88,23 @@ class Header extends Component {
 
               </Nav>
 
+
               <Nav className='ml-auto' navbar>
-                <NavItem>
+                <NavItem id='loginButton'>
                   <Button outline onClick={this.toggleModal}>
                     <span className='fa fa-sign-in fa-lg'> Login</span>
                   </Button>
                 </NavItem>
 
-                <NavItem>
+                <NavItem id='registerButton'>
                   <Button color='primary' className='ml-3' href='/register'>
                     <span className='fa fa-user fa-lg'> Register</span>
+                  </Button>
+                </NavItem>
+
+                <NavItem id='logoutButton' style={{ display: 'none' }}>
+                  <Button outline onClick={this.handleLogout} >
+                    <span className='fa fa-sign-in fa-lg'> Logout</span>
                   </Button>
                 </NavItem>
               </Nav>
@@ -88,19 +112,6 @@ class Header extends Component {
             </Collapse>
           </div>
         </Navbar>
-
-        <Jumbotron>
-          <div className='container'>
-            <div className='row row-header'>
-              <div className='col-12 col-sm-6'>
-                <h1>Talk Out</h1>
-                <p>Lets talk togeather to fight depression !</p>
-              </div>
-            </div>
-          </div>
-        </Jumbotron>
-
-
 
         <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
           <ModalHeader>Login</ModalHeader>
@@ -128,6 +139,20 @@ class Header extends Component {
 
           </ModalBody>
         </Modal>
+        <Jumbotron>
+          <div className='container'>
+            <div className='row row-header'>
+              <div className='col-12 col-sm-6'>
+                <h1>Talk Out</h1>
+                <p>Lets talk togeather to fight depression ! </p>
+              </div>
+            </div>
+          </div>
+        </Jumbotron>
+
+
+
+
       </>
     )
   }
