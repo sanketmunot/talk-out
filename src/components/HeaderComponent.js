@@ -2,6 +2,34 @@ import React, { Component } from 'react'
 import { Navbar, NavbarBrand, Jumbotron, Form, Button, Modal, ModalHeader, ModalBody, Nav, NavbarToggler, Collapse, NavItem, FormGroup, Input, Label } from 'reactstrap'
 import { NavLink } from 'react-router-dom'
 import axios from 'axios'
+
+const LoginComponent = function (props) {
+  if(!props.isLoggedIn){
+  return (
+    <>
+    <NavItem id='loginButton'>
+      <Button outline onClick={props.toggleModal} >
+        <span className='fa fa-sign-in fa-lg'> Login</span>
+      </Button>
+    </NavItem>
+    <NavItem id='registerButton'>
+      <Button color='primary' className='ml-3' href='/register'>
+        <span className='fa fa-user fa-lg'> Register</span>
+      </Button>
+    </NavItem>
+    </>
+    )}
+    if(props.isLoggedIn){
+      return(<>
+        <NavItem id='logoutButton'>
+        <Button outline onClick={props.handleLogout} >
+          <span className='fa fa-sign-in fa-lg'> Logout</span>
+        </Button>
+      </NavItem>
+      </>
+      )
+    }
+}
 class Header extends Component {
 
   constructor(props) {
@@ -25,10 +53,7 @@ class Header extends Component {
   }
 
   toggleModal() {
-    this.props.changeLoginStatus(true)
-    document.getElementById('registerButton').style.display = 'none'
-    document.getElementById('loginButton').style.display = 'none'
-    document.getElementById('logoutButton').style.display = 'block'
+    // this.props.changeLoginStatus(true)
     this.setState({
       isModalOpen: !this.state.isModalOpen
     })
@@ -40,36 +65,36 @@ class Header extends Component {
       username: document.getElementById('username').value,
       password: document.getElementById('password').value
     }
+
     axios.post('http://localhost:9000/login', data).then((res) => {
       if (res.data.auth) {
         this.props.changeLoginStatus(true)
-        document.getElementById('registerButton').style.display = 'none'
-        document.getElementById('loginButton').style.display = 'none'
-        document.getElementById('logoutButton').style.display = 'block'
+        
         console.log('loggedin')
       }
       else {
-        console.log("wrong")
+        alert('Wrong Credentials! Please Try Again')
+        this.toggleModal()
+        document.getElementById('username').value=''
+        document.getElementById('password').value=''
       }
 
     })
   }
 
-  handleLogout(){
+  handleLogout() {
     this.props.changeLoginStatus(false)
-        document.getElementById('registerButton').style.display = 'block'
-        document.getElementById('loginButton').style.display = 'block'
-        document.getElementById('logoutButton').style.display = 'none'
   }
 
 
   render() {
     return (
       <>
+
         <Navbar dark expand='md' color='warning'>
           <div className='container'>
             <NavbarToggler onClick={this.toggleNav} />
-            <NavbarBrand className='mr-auto' href='/'>Talk Out
+            <NavbarBrand className='mr-auto'>Talk Out
             </NavbarBrand>
 
             <Collapse isOpen={this.state.isNavOpen} navbar>
@@ -90,23 +115,12 @@ class Header extends Component {
 
 
               <Nav className='ml-auto' navbar>
-                <NavItem id='loginButton'>
-                  <Button outline onClick={this.toggleModal}>
-                    <span className='fa fa-sign-in fa-lg'> Login</span>
-                  </Button>
-                </NavItem>
+                <LoginComponent toggleModal={this.toggleModal}
+                handleLogout={this.handleLogout} isLoggedIn={this.props.isLoggedIn} />
 
-                <NavItem id='registerButton'>
-                  <Button color='primary' className='ml-3' href='/register'>
-                    <span className='fa fa-user fa-lg'> Register</span>
-                  </Button>
-                </NavItem>
 
-                <NavItem id='logoutButton' style={{ display: 'none' }}>
-                  <Button outline onClick={this.handleLogout} >
-                    <span className='fa fa-sign-in fa-lg'> Logout</span>
-                  </Button>
-                </NavItem>
+
+               
               </Nav>
 
             </Collapse>
@@ -132,7 +146,7 @@ class Header extends Component {
             <Button type='submit' value='submit' color='primary' onClick={this.handleLogin}>Login</Button>
 
 
-            <NavLink to='/register'>
+            <NavLink to='/register' onClick={this.toggleModal}>
               New on community? Register to help others
               </NavLink>
 

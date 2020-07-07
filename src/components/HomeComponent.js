@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Card, CardImg, CardBody, CardTitle, Button, Alert } from 'reactstrap';
 import { THREADS } from '../shared/threads'
+import { Link } from 'react-router-dom';
 class Home extends Component {
     constructor(props) {
         super(props)
@@ -30,7 +31,9 @@ class Home extends Component {
                                             <CardImg top width="100%" className='mt-1' src={"https://source.unsplash.com/500x400/?" + thread.title} />
                                             <CardBody>
                                                 <CardTitle>{thread.title}</CardTitle>
-                                                <Button href={'/threadview/' + thread.thread_id}>Button</Button>
+                                                <Link to={'/threadview/' + thread.thread_id}>
+                                                <Button>Button</Button>
+                                                </Link>
                                             </CardBody>
                                         </Card>
 

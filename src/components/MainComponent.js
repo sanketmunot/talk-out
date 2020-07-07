@@ -9,22 +9,30 @@ import Thread from './ThreadComponent'
 class Main extends Component {
     constructor(props) {
         super(props);
+        if(localStorage.getItem('isLoggedIn')==true){
         this.state = {
-            isLoggedIn: false,
-            threadView: null
+            isLoggedIn: true
+        }}
+        else{
+            this.state = {
+                isLoggedIn: false
+            }
         }
+
         this.changeLoginStatus = this.changeLoginStatus.bind(this)
     }
-
+    
     changeLoginStatus(val) {
         this.setState({
             isLoggedIn: val
         })
+        localStorage.setItem('isLoggedIn',val)
+        console.log(localStorage.getItem('isLoggedIn'))
     }
 
 
     render() {
-
+        
         return (
             <div>
 
